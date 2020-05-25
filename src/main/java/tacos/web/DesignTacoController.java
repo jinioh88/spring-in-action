@@ -12,6 +12,7 @@ import tacos.Ingredient;
 import tacos.Ingredient.Type;
 import tacos.Taco;
 import tacos.data.IngredientRepository;
+import tacos.data.TacoRepository;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/design")
 public class DesignTacoController {
     private final IngredientRepository ingredientRepository;
+    private final TacoRepository tacoRepository;
 
     @GetMapping
     public String showDesignForm(Model model) {
