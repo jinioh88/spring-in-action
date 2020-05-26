@@ -17,7 +17,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 @Repository
 public class JdbcTacoRepository implements TacoRepository {
-    private JdbcTemplate jdbc;
+    private final JdbcTemplate jdbc;
 
     @Override
     public Taco save(Taco taco) {
@@ -33,7 +33,7 @@ public class JdbcTacoRepository implements TacoRepository {
     private long saveTacoInfo(Taco taco) {
         taco.setCreatedAt(new Date());
         PreparedStatementCreator psc = new PreparedStatementCreatorFactory(
-                "insert into Taco (name, cratedAt) values (?, ?)", Types.VARCHAR, Types.TIMESTAMP)
+                "insert into Taco (name, createdAt) values (?, ?)", Types.VARCHAR, Types.TIMESTAMP)
                 .newPreparedStatementCreator(Arrays.asList(taco.getName(),
                         new Timestamp(taco.getCreatedAt().getTime())));
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -48,3 +48,4 @@ public class JdbcTacoRepository implements TacoRepository {
         );
     }
 }
+

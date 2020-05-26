@@ -5,11 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import tacos.Ingredient;
 import tacos.Ingredient.Type;
+import tacos.Order;
 import tacos.Taco;
 import tacos.data.IngredientRepository;
 import tacos.data.TacoRepository;
@@ -24,9 +23,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/design")
+@SessionAttributes("order")
 public class DesignTacoController {
     private final IngredientRepository ingredientRepository;
     private final TacoRepository tacoRepository;
+
+    @ModelAttribute(name = "order")
+    public Order order() {
+        return new Order();
+    }
+
+    @ModelAttribute(name = "taco")
+    public Taco taco() {
+        return new Taco();
+    }
 
     @GetMapping
     public String showDesignForm(Model model) {
@@ -53,12 +63,13 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processDesign(@Valid Taco design, Errors errors) {
+    public String processDesign(@Valid Taco design, Errors errors, @ModelAttribute Order order) {
         if(errors.hasErrors()) {
             return "design";
         }
 
-        log.info("Processing design : " + design);
+        Taco saved = tacoRepository.save(design);
+        order.addDesign(saved);
 
         return "redirect:/orders/current";
     }
