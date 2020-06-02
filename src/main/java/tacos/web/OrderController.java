@@ -74,4 +74,40 @@ public class OrderController {
 
         return "orderList";
     }
+
+    @PutMapping("/{orderId}")
+    public Order putOrder(@RequestBody Order order) {
+        return orderRepository.save(order);
+    }
+
+    @PatchMapping(params = "/{orderId}", consumes = "application/json")
+    public Order patchOrder(@PathVariable("orderId") Long orderId, @RequestBody Order patch) {
+        Order order = orderRepository.findById(orderId).get();
+        if(patch.getDeliveryCity() != null) {
+            order.setDeliveryCity(patch.getDeliveryCity());
+        }
+        if(patch.getCcCVV() != null) {
+            order.setCcCVV(patch.getCcCVV());
+        }
+        if(patch.getCcExpiration() != null) {
+            order.setCcExpiration(patch.getCcExpiration());
+        }
+        if(patch.getCcNumber() != null) {
+            order.setCcNumber(patch.getCcNumber());
+        }
+        if(patch.getDeliveryName() != null) {
+            order.setDeliveryName(patch.getDeliveryName());
+        }
+        if(patch.getDeliveryState() != null) {
+            order.setDeliveryState(patch.getDeliveryState());
+        }
+        if(patch.getDeliveryStreet() != null) {
+            order.setDeliveryStreet(patch.getDeliveryStreet());
+        }
+        if(patch.getDeliveryZip() != null) {
+            order.setDeliveryZip(patch.getDeliveryZip());
+        }
+
+        return orderRepository.save(order);
+    }
 }
